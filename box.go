@@ -105,10 +105,13 @@ func (b *box) RemoveAllCircles() error {
 	var counter, i int
 
 	fmt.Println("Length before: ", len(b.shapes))
+	fmt.Println(b.shapes)
 
 	for len(b.shapes) > i {
+
 		if _, ok := b.shapes[i].(Circle); !ok {
 			i++
+			fmt.Println(b.shapes[i], ok)
 			continue
 		}
 		b.shapes = append(b.shapes[:i], b.shapes[i+1:]...)
