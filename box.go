@@ -31,10 +31,12 @@ func (b *box) AddShape(shape Shape) error {
 		b.shapes = make([]Shape, 0)
 	}
 
-	if len(b.shapes) < b.shapesCapacity {
-		b.shapes = append(b.shapes, shape)
+	if len(b.shapes) >= b.shapesCapacity {
+		return errorShapeCapacityOut
 	}
-	return errorShapeCapacityOut
+
+	b.shapes = append(b.shapes, shape)
+	return nil
 }
 
 // GetByIndex allows getting shape by index
@@ -99,12 +101,15 @@ func (b *box) SumArea() float64 {
 // RemoveAllCircles removes all circles in the list
 // whether circles are not exist in the list, then returns an error
 func (b *box) RemoveAllCircles() error {
-	var counter int
-	for i := 0; i < len(b.shapes); i += 1 {
-		if _, ok := b.shapes[i].(Circle); ok {
-			b.shapes = append(b.shapes[:i], b.shapes[i+1:]...)
-			counter++
+	var counter, i int
+
+	for len(b.shapes) > i {
+		if _, ok := b.shapes[i].(Circle); !ok {
+			i++
+			continue
 		}
+		b.shapes = append(b.shapes[:i], b.shapes[i+1:]...)
+		counter++
 	}
 
 	if counter == 0 {
